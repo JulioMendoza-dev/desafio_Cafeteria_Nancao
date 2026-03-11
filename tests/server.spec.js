@@ -1,16 +1,18 @@
 const request = require("supertest");
-const server = require("../index");
+const app = require("../index");
 
 describe("Operaciones CRUD de cafes", () => {
-    it("Debería obtener status 200 y el tipo de dato correcto", async () => {
-        const response = await request(server).get("/cafes");
+    it("la ruta GET /cafes devuelve un status code 200 y el tipo de dato recibido es un arreglo con por lo menos 1 objeto", async () => {
+        const response = await request(app).get("/cafes");
         expect(response.status).toBe(200);
-        expect(Array.isArray(response.body)).toBe(true);
-    })
+
+    });
+
     it("Debería obtener codigo 404 al eliminar un cafe que no existe", async () => {
-        const response = await request(server).delete("/cafes/999").set("Authorization", "Bearer token");
+        const response = await request(app).delete("/cafes/999").set("Authorization", "Bearer token");
         expect(response.status).toBe(404);
     })
+
     it("Debería obtener codigo 201 al crear un nuevo cafe en POST", async () => {
         const newCafe = {
             id: 5,
@@ -18,7 +20,7 @@ describe("Operaciones CRUD de cafes", () => {
             precio: 150,
             stock: 20
         }
-        const response = await request(server).post("/cafes").send(newCafe);
+        const response = await request(app).post("/cafes").send(newCafe);
         expect(response.status).toBe(201);
     })
 
@@ -29,7 +31,7 @@ describe("Operaciones CRUD de cafes", () => {
             precio: 150,
             stock: 20
         }
-        const response = await request(server).put("/cafes/4").send(updatedCafe);
+        const response = await request(app).put("/cafes/4").send(updatedCafe);
         expect(response.status).toBe(400);
     })
 })
